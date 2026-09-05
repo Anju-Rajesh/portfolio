@@ -33,7 +33,7 @@
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="assets/css/main.css?v=2.0" rel="stylesheet">
   <style>
     .hero-blur-portrait {
       width: 320px;
@@ -1076,7 +1076,8 @@
           </div>
 
           <div class="col-lg-8">
-            <form action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST">
+            <form action="https://api.web3forms.com/submit" method="POST" id="contact-form">
+              <input type="hidden" name="access_key" value="2070c16f-6d6f-4fd9-a87d-31879ca60e3a">
               <div class="row gy-4">
 
                 <div class="col-md-6">
@@ -1096,7 +1097,8 @@
                 </div>
 
                 <div class="col-md-12 text-center">
-                  <button type="submit">Send Message</button>
+                  <div id="contact-form-message" class="contact-form-message"></div>
+                  <button type="submit" id="contact-submit-btn">Send Message</button>
                 </div>
 
               </div>
@@ -1172,7 +1174,7 @@
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
 
-  <script src="assets/js/main.js"></script>
+  <script src="assets/js/main.js?v=2.0"></script>
 
 </body>
 

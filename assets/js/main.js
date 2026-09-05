@@ -37,7 +37,7 @@
   }
 
   /**
-   * Hide mobile nav on same-page/hash links
+   * Hide mobile nav on same-page/hash links or backdrop click
    */
   document.querySelectorAll('#navmenu a').forEach(navmenu => {
     navmenu.addEventListener('click', () => {
@@ -45,8 +45,16 @@
         mobileNavToogle();
       }
     });
-
   });
+
+  const navmenuOverlay = document.querySelector('#navmenu');
+  if (navmenuOverlay) {
+    navmenuOverlay.addEventListener('click', (e) => {
+      if (e.target === navmenuOverlay && document.querySelector('.mobile-nav-active')) {
+        mobileNavToogle();
+      }
+    });
+  }
 
   /**
    * Toggle mobile nav dropdowns
@@ -235,5 +243,68 @@
   }
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
+
+  /**
+   * Contact Form Submission (Web3Forms AJAX)
+   */
+  const contactForm = document.getElementById('contact-form');
+  const contactSubmitBtn = document.getElementById('contact-submit-btn');
+  const contactFormMessage = document.getElementById('contact-form-message');
+
+  if (contactForm && contactSubmitBtn && contactFormMessage) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      if (!contactForm.checkValidity()) {
+        contactForm.reportValidity();
+        return;
+      }
+
+      // Reset message state
+      contactFormMessage.className = 'contact-form-message';
+      contactFormMessage.style.display = 'none';
+      contactFormMessage.textContent = '';
+
+      // Set loading state
+      const originalBtnText = contactSubmitBtn.textContent;
+      contactSubmitBtn.disabled = true;
+      contactSubmitBtn.textContent = 'Sending...';
+
+      const formData = new FormData(contactForm);
+      const jsonObject = Object.fromEntries(formData);
+      const jsonString = JSON.stringify(jsonObject);
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: jsonString
+      })
+      .then(async (response) => {
+        let json = await response.json();
+        if (response.status === 200) {
+          contactFormMessage.className = 'contact-form-message success';
+          contactFormMessage.textContent = 'Thank you! Your message has been sent successfully.';
+          contactFormMessage.style.display = 'block';
+          contactForm.reset();
+        } else {
+          contactFormMessage.className = 'contact-form-message error';
+          contactFormMessage.textContent = 'Sorry, something went wrong. Please try again.';
+          contactFormMessage.style.display = 'block';
+        }
+      })
+      .catch(() => {
+        contactFormMessage.className = 'contact-form-message error';
+        contactFormMessage.textContent = 'Sorry, something went wrong. Please try again.';
+        contactFormMessage.style.display = 'block';
+      })
+      .finally(() => {
+        contactSubmitBtn.disabled = false;
+        contactSubmitBtn.textContent = originalBtnText;
+      });
+    });
+  }
 
 })();
